@@ -79,7 +79,7 @@ const ComplexOrderSchema = z.object({
   })).optional().describe("Applied discount codes"),
   total: z.number().min(0).describe("Total order amount in USD"),
   notes: z.string().optional().describe("Special instructions or notes"),
-}).describe("Complex order with nested objects and arrays to test form rendering");
+}).describe("Complex order with nested objects and arrays to test form rendering (Issue #332)");
 
 const StrictTypeValidationSchema = z.object({
   stringField: z.string().min(1).describe("Must be a string (test entering numbers like 123321)"),
@@ -92,7 +92,7 @@ const StrictTypeValidationSchema = z.object({
   dateField: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).describe("Must be a date in YYYY-MM-DD format"),
   positiveNumber: z.number().positive().describe("Must be a positive number (test entering -5)"),
   stringWithLength: z.string().min(5).max(20).describe("String must be between 5 and 20 characters"),
-}).describe("Tool to test strict type validation and error handling");
+}).describe("Tool to test strict type validation and error handling (Issue #187)");
 
 export enum ToolName {
   // Basic Tools
@@ -196,12 +196,12 @@ export function setupToolHandlers(server: Server) {
       },
       {
         name: ToolName.COMPLEX_ORDER,
-        description: "Tests complex nested objects and arrays",
+        description: "Tests complex nested objects and arrays (Issue #332)",
         inputSchema: zodToJsonSchema(ComplexOrderSchema) as ToolInput,
       },
       {
         name: ToolName.STRICT_TYPE_VALIDATION,
-        description: "Tests strict type validation and error handling",
+        description: "Tests strict type validation and error handling (Issue #187)",
         inputSchema: zodToJsonSchema(StrictTypeValidationSchema) as ToolInput,
       },
     ];
