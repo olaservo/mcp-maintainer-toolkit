@@ -1,0 +1,49 @@
+{
+  "name": "mcp-maintainer-toolkit",
+  "version": "0.1.0",
+  "description": "MCP Server with utilities to help with maintaining MCP repos",
+  "keywords": ["mcp", "model-context-protocol", "server", "toolkit", "maintainer", "utilities"],
+  "license": "MIT",
+  "author": "Ola Hungerford",
+  "homepage": "https://www.olahungerford.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olaservo/mcp-maintainer-toolkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/olaservo/mcp-maintainer-toolkit/issues"
+  },
+  "type": "module",
+  "bin": {
+    "mcp-maintainer-toolkit": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsc && shx chmod +x dist/*.js",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "start": "node dist/index.js",
+    "start:sse": "node dist/sse.js",
+    "start:streamableHttp": "node dist/streamableHttp.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.2",
+    "express": "^5.1.0",
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.24.6"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "shx": "^0.4.0",
+    "typescript": "^5.9.2"
+  }
+}

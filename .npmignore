@@ -1,0 +1,50 @@
+# Source files
+*.ts
+!dist/**/*.d.ts
+tsconfig.json
+
+# Development files
+node_modules/
+.git/
+.gitignore
+.vscode/
+.idea/
+.claude/
+
+# Build artifacts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+test/
+tests/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+
+# Documentation (except README)
+docs/
+*.md
+!README.md
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+*~
+*.swp
+*.swo
+
+# Temporary files
+tmp/
+temp/
