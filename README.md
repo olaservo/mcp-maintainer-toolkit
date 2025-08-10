@@ -1,8 +1,5 @@
 # MCP Maintainer Toolkit
 
-[![npm version](https://badge.fury.io/js/mcp-maintainer-toolkit.svg)](https://badge.fury.io/js/mcp-maintainer-toolkit)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 A Model Context Protocol (MCP) server with utilities to help with maintaining MCP repositories. This toolkit provides various tools and utilities for repository maintenance, testing, and development workflows.
 
 ## Features
