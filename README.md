@@ -9,8 +9,6 @@ A Model Context Protocol (MCP) server with utilities to help with maintaining MC
 
 - **Multiple Transport Support**: STDIO, SSE, and Streamable HTTP transports
 - **Comprehensive Testing Tools**: Tools for testing various MCP features and edge cases
-- **Schema Validation**: Robust parameter validation using Zod schemas
-- **Progress Notifications**: Support for long-running tasks with progress updates
 - **Rich Parameter Types**: Support for complex nested objects, arrays, and conditional parameters
 
 ## Installation
@@ -68,15 +66,6 @@ npm run start:sse      # SSE on port 3001
 npm run start:streamableHttp  # Streamable HTTP on port 3002
 ```
 
-## Available Tools
-
-The toolkit includes various testing and utility tools:
-
-- **Basic Tools**: Echo, Add, Get Current Time
-- **Data Tools**: Format Data (JSON, YAML, Table)
-- **Advanced Features**: Long Running Tasks, Annotated Responses
-- **Testing Tools**: Complex schema validation, type testing, parameter submission testing
-
 ## Configuration
 
 ### Environment Variables
@@ -114,14 +103,6 @@ npm run build
 # Start development with watch mode
 npm run watch
 ```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-MIT © [Ola Hungerford](https://www.olahungerford.com)
 
 ## Links
 
