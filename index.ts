@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Export the createServer function for programmatic usage
-export { createServer } from './example-tools.js';
+export { createServer } from './server.js';
 
 // Only run the CLI when this file is executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {

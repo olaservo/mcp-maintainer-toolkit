@@ -1,7 +1,7 @@
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { InMemoryEventStore } from '@modelcontextprotocol/sdk/examples/shared/inMemoryEventStore.js';
 import express, { Request, Response } from "express";
-import { createServer } from "./example-tools.js";
+import { createServer } from "./server.js";
 import { randomUUID } from 'node:crypto';
 
 console.error('Starting Streamable HTTP server...');
