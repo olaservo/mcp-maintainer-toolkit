@@ -79,7 +79,7 @@ const ComplexOrderSchema = z.object({
   })).optional().describe("Applied discount codes"),
   total: z.number().min(0).describe("Total order amount in USD"),
   notes: z.string().optional().describe("Special instructions or notes"),
-}).describe("Complex order with nested objects and arrays to test form rendering (Issue #332)");
+}).describe("Complex order with nested objects and arrays to test form rendering (https://github.com/modelcontextprotocol/inspector/issues/332)");
 
 const StrictTypeValidationSchema = z.object({
   stringField: z.string().min(1).describe("Must be a string (test entering numbers like 123321)"),
@@ -92,14 +92,14 @@ const StrictTypeValidationSchema = z.object({
   dateField: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).describe("Must be a date in YYYY-MM-DD format"),
   positiveNumber: z.number().positive().describe("Must be a positive number (test entering -5)"),
   stringWithLength: z.string().min(5).max(20).describe("String must be between 5 and 20 characters"),
-}).describe("Tool to test strict type validation and error handling (Issue #187)");
+}).describe("Tool to test strict type validation and error handling (https://github.com/modelcontextprotocol/inspector/issues/187)");
 
 const UnionTypeTestSchema = z.object({
   optionalString: z.string().nullable().default(null).describe("Optional string parameter with None default (like category: str | None = None)"),
   optionalNumber: z.number().nullable().default(null).describe("Optional number parameter with None default"),
   optionalBoolean: z.boolean().nullable().default(null).describe("Optional boolean parameter with None default"),
   requiredString: z.string().describe("Required string parameter"),
-}).describe("Tool to test union type support for optional parameters (Issue #672)");
+}).describe("Tool to test union type support for optional parameters (https://github.com/modelcontextprotocol/inspector/issues/672)");
 
 export enum ToolName {
   // Basic Tools
@@ -204,17 +204,17 @@ export function setupToolHandlers(server: Server) {
       },
       {
         name: ToolName.COMPLEX_ORDER,
-        description: "Tests complex nested objects and arrays (Issue #332)",
+        description: "Tests complex nested objects and arrays (https://github.com/modelcontextprotocol/inspector/issues/332)",
         inputSchema: zodToJsonSchema(ComplexOrderSchema) as ToolInput,
       },
       {
         name: ToolName.STRICT_TYPE_VALIDATION,
-        description: "Tests strict type validation and error handling (Issue #187)",
+        description: "Tests strict type validation and error handling (https://github.com/modelcontextprotocol/inspector/issues/187)",
         inputSchema: zodToJsonSchema(StrictTypeValidationSchema) as ToolInput,
       },
       {
         name: ToolName.UNION_TYPE_TEST,
-        description: "Tests union type support for optional parameters (PR #673)",
+        description: "Tests union type support for optional parameters (https://github.com/modelcontextprotocol/inspector/issues/672)",
         inputSchema: zodToJsonSchema(UnionTypeTestSchema) as ToolInput,
       },
     ];
