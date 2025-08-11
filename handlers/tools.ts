@@ -94,6 +94,13 @@ const StrictTypeValidationSchema = z.object({
   stringWithLength: z.string().min(5).max(20).describe("String must be between 5 and 20 characters"),
 }).describe("Tool to test strict type validation and error handling (Issue #187)");
 
+const UnionTypeTestSchema = z.object({
+  optionalString: z.string().optional().describe("Optional string parameter (like category: str | None = None)"),
+  optionalNumber: z.number().optional().describe("Optional number parameter"),
+  optionalBoolean: z.boolean().optional().describe("Optional boolean parameter"),
+  requiredString: z.string().describe("Required string parameter"),
+}).describe("Tool to test union type support for optional parameters (PR #673)");
+
 export enum ToolName {
   // Basic Tools
   ECHO = "echo",
@@ -110,6 +117,7 @@ export enum ToolName {
   // Testing Tools
   COMPLEX_ORDER = "complexOrder",
   STRICT_TYPE_VALIDATION = "strictTypeValidation",
+  UNION_TYPE_TEST = "unionTypeTest",
 }
 
 // Helper functions
@@ -203,6 +211,11 @@ export function setupToolHandlers(server: Server) {
         name: ToolName.STRICT_TYPE_VALIDATION,
         description: "Tests strict type validation and error handling (Issue #187)",
         inputSchema: zodToJsonSchema(StrictTypeValidationSchema) as ToolInput,
+      },
+      {
+        name: ToolName.UNION_TYPE_TEST,
+        description: "Tests union type support for optional parameters (PR #673)",
+        inputSchema: zodToJsonSchema(UnionTypeTestSchema) as ToolInput,
       },
     ];
 
@@ -375,6 +388,31 @@ export function setupToolHandlers(server: Server) {
           {
             type: "text",
             text: `All fields validated successfully. String: "${validatedArgs.stringField}", Number: ${validatedArgs.numberField}, Integer: ${validatedArgs.integerField}`,
+          },
+        ],
+      };
+    }
+
+    if (name === ToolName.UNION_TYPE_TEST) {
+      const validatedArgs = UnionTypeTestSchema.parse(args);
+      const optionals = [];
+      if (validatedArgs.optionalString !== undefined) {
+        optionals.push(`optionalString: "${validatedArgs.optionalString}"`);
+      }
+      if (validatedArgs.optionalNumber !== undefined) {
+        optionals.push(`optionalNumber: ${validatedArgs.optionalNumber}`);
+      }
+      if (validatedArgs.optionalBoolean !== undefined) {
+        optionals.push(`optionalBoolean: ${validatedArgs.optionalBoolean}`);
+      }
+      
+      const optionalText = optionals.length > 0 ? `Optional parameters provided: ${optionals.join(', ')}` : "No optional parameters provided";
+      
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Union type test completed! Required: "${validatedArgs.requiredString}". ${optionalText}`,
           },
         ],
       };

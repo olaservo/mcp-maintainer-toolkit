@@ -4,7 +4,10 @@
 export { createServer } from './server.js';
 
 // Only run the CLI when this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Normalize paths for cross-platform compatibility
+const normalizedImportUrl = import.meta.url;
+const normalizedArgvPath = `file:///${process.argv[1].replace(/\\/g, '/')}`;
+if (normalizedImportUrl === normalizedArgvPath) {
     // Parse command line arguments first
     const args = process.argv.slice(2);
     const scriptName = args[0] || 'stdio';
