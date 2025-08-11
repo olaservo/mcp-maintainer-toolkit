@@ -1,8 +1,15 @@
 {
   "name": "mcp-maintainer-toolkit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MCP Server with utilities to help with maintaining MCP repos",
-  "keywords": ["mcp", "model-context-protocol", "server", "toolkit", "maintainer", "utilities"],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "server",
+    "toolkit",
+    "maintainer",
+    "utilities"
+  ],
   "license": "MIT",
   "author": "Ola Hungerford",
   "homepage": "https://www.olahungerford.com",
