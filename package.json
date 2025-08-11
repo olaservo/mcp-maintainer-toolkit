@@ -1,6 +1,6 @@
 {
   "name": "mcp-maintainer-toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP Server with utilities to help with maintaining MCP repos",
   "keywords": ["mcp", "model-context-protocol", "server", "toolkit", "maintainer", "utilities"],
   "license": "MIT",
