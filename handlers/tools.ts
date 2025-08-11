@@ -95,9 +95,9 @@ const StrictTypeValidationSchema = z.object({
 }).describe("Tool to test strict type validation and error handling (Issue #187)");
 
 const UnionTypeTestSchema = z.object({
-  optionalString: z.string().optional().describe("Optional string parameter (like category: str | None = None)"),
-  optionalNumber: z.number().optional().describe("Optional number parameter"),
-  optionalBoolean: z.boolean().optional().describe("Optional boolean parameter"),
+  optionalString: z.string().nullable().default(null).describe("Optional string parameter with None default (like category: str | None = None)"),
+  optionalNumber: z.number().nullable().default(null).describe("Optional number parameter with None default"),
+  optionalBoolean: z.boolean().nullable().default(null).describe("Optional boolean parameter with None default"),
   requiredString: z.string().describe("Required string parameter"),
 }).describe("Tool to test union type support for optional parameters (Issue #672)");
 
@@ -396,17 +396,17 @@ export function setupToolHandlers(server: Server) {
     if (name === ToolName.UNION_TYPE_TEST) {
       const validatedArgs = UnionTypeTestSchema.parse(args);
       const optionals = [];
-      if (validatedArgs.optionalString !== undefined) {
+      if (validatedArgs.optionalString !== null) {
         optionals.push(`optionalString: "${validatedArgs.optionalString}"`);
       }
-      if (validatedArgs.optionalNumber !== undefined) {
+      if (validatedArgs.optionalNumber !== null) {
         optionals.push(`optionalNumber: ${validatedArgs.optionalNumber}`);
       }
-      if (validatedArgs.optionalBoolean !== undefined) {
+      if (validatedArgs.optionalBoolean !== null) {
         optionals.push(`optionalBoolean: ${validatedArgs.optionalBoolean}`);
       }
       
-      const optionalText = optionals.length > 0 ? `Optional parameters provided: ${optionals.join(', ')}` : "No optional parameters provided";
+      const optionalText = optionals.length > 0 ? `Optional parameters provided: ${optionals.join(', ')}` : "All optional parameters are null (default)";
       
       return {
         content: [
