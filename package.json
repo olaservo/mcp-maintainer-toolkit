@@ -1,6 +1,6 @@
 {
   "name": "mcp-maintainer-toolkit",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "MCP Server with utilities to help with maintaining MCP repos",
   "keywords": [
     "mcp",
