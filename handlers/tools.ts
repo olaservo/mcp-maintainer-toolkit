@@ -99,7 +99,7 @@ const UnionTypeTestSchema = z.object({
   optionalNumber: z.number().optional().describe("Optional number parameter"),
   optionalBoolean: z.boolean().optional().describe("Optional boolean parameter"),
   requiredString: z.string().describe("Required string parameter"),
-}).describe("Tool to test union type support for optional parameters (PR #673)");
+}).describe("Tool to test union type support for optional parameters (Issue #672)");
 
 export enum ToolName {
   // Basic Tools
