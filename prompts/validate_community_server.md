@@ -4,7 +4,7 @@ OUR CURRENT TASK:
 
 Since this is an official repository for MCP, our job is to review this link to make sure that the server we add to this list meets the following guidelines at minimum:
 
-- The link MUST go to a code repository for an MCP Server
+- The link MUST go to a code repository for an MCP Server OR documentation on how to configure the server
 - There are no red flags related to security or other aspects of the repo
 - There MUST be documentation that indicates what it does and how to install it
 
