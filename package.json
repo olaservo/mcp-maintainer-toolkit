@@ -35,7 +35,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "tsc && shx chmod +x dist/*.js",
+    "build": "tsc && shx chmod +x dist/*.js && shx cp -r prompts dist/",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "start": "node dist/index.js",

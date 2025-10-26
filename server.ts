@@ -1,6 +1,7 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { setupToolHandlers } from "./handlers/tools.js";
 import { setupResourceHandlers } from "./handlers/resources.js";
+import { setupPromptHandlers } from "./handlers/prompts.js";
 
 export const createServer = () => {
   const server = new Server(
@@ -12,6 +13,7 @@ export const createServer = () => {
       capabilities: {
         tools: {},
         resources: { subscribe: true },
+        prompts: {},
       },
     }
   );
@@ -21,6 +23,9 @@ export const createServer = () => {
 
   // Setup resource handlers
   const { cleanup: cleanupResources } = setupResourceHandlers(server);
+
+  // Setup prompt handlers
+  setupPromptHandlers(server);
 
   const cleanup = async () => {
     await cleanupResources();
