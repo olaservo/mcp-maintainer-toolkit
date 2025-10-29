@@ -15,7 +15,8 @@ type ToolInput = z.infer<typeof ToolInputSchema>;
 
 // Basic Tools
 const EchoSchema = z.object({
-  message: z.string().describe("Message to echo back"),
+    message: z.string().describe("Message to echo back"),
+    numberList: z.array(z.number()).nullable().default(null).describe("Nullable List of numbers"),
 });
 
 const AddSchema = z.object({
@@ -150,16 +151,16 @@ Try scrolling this description in the detail view to see the overflow handling i
 export enum ToolName {
   // Basic Tools
   ECHO = "echo",
-  ADD = "add", 
+  ADD = "add",
   GET_CURRENT_TIME = "getCurrentTime",
-  
+
   // Data Tools
   FORMAT_DATA = "formatData",
-  
+
   // Advanced Features
   LONG_RUNNING_TASK = "longRunningTask",
   ANNOTATED_RESPONSE = "annotatedResponse",
-  
+
   // Testing Tools
   COMPLEX_ORDER = "complexOrder",
   STRICT_TYPE_VALIDATION = "strictTypeValidation",
@@ -172,15 +173,15 @@ export enum ToolName {
 function formatAsTable(data: any): string {
   if (Array.isArray(data)) {
     if (data.length === 0) return "Empty array";
-    
+
     const headers = Object.keys(data[0]);
     let table = headers.join(" | ") + "\n";
     table += headers.map(() => "---").join(" | ") + "\n";
-    
+
     for (const row of data) {
       table += headers.map(h => String(row[h] || "")).join(" | ") + "\n";
     }
-    
+
     return table;
   } else if (typeof data === 'object' && data !== null) {
     let table = "Key | Value\n--- | ---\n";
@@ -189,14 +190,14 @@ function formatAsTable(data: any): string {
     }
     return table;
   }
-  
+
   return String(data);
 }
 
 function formatAsYaml(data: any): string {
   function yamlify(obj: any, indent = 0): string {
     const spaces = "  ".repeat(indent);
-    
+
     if (Array.isArray(obj)) {
       return obj.map(item => `${spaces}- ${yamlify(item, 0)}`).join("\n");
     } else if (typeof obj === 'object' && obj !== null) {
@@ -213,7 +214,7 @@ function formatAsYaml(data: any): string {
       return String(obj);
     }
   }
-  
+
   return yamlify(data);
 }
 
@@ -287,7 +288,7 @@ export function setupToolHandlers(server: Server) {
     if (name === ToolName.ECHO) {
       const validatedArgs = EchoSchema.parse(args);
       return {
-        content: [{ type: "text", text: `Echo: ${validatedArgs.message}` }],
+          content: [{ type: "text", text: `Echo: ${validatedArgs.message}, Number List: ${validatedArgs.numberList === null ? "null" : validatedArgs.numberList?.join(", ")}` }],
       };
     }
 
@@ -307,7 +308,7 @@ export function setupToolHandlers(server: Server) {
     if (name === ToolName.GET_CURRENT_TIME) {
       const validatedArgs = GetCurrentTimeSchema.parse(args);
       const now = new Date();
-      
+
       let timeString: string;
       if (validatedArgs.timezone) {
         try {
@@ -318,7 +319,7 @@ export function setupToolHandlers(server: Server) {
       } else {
         timeString = now.toLocaleString();
       }
-      
+
       return {
         content: [
           {
@@ -332,7 +333,7 @@ export function setupToolHandlers(server: Server) {
     if (name === ToolName.FORMAT_DATA) {
       const validatedArgs = FormatDataSchema.parse(args);
       let formatted: string;
-      
+
       switch (validatedArgs.format) {
         case "json":
           formatted = JSON.stringify(validatedArgs.data, null, 2);
@@ -346,7 +347,7 @@ export function setupToolHandlers(server: Server) {
         default:
           formatted = String(validatedArgs.data);
       }
-      
+
       return {
         content: [
           {
@@ -391,17 +392,17 @@ export function setupToolHandlers(server: Server) {
     if (name === ToolName.ANNOTATED_RESPONSE) {
       const validatedArgs = AnnotatedResponseSchema.parse(args);
       const { messageType, includeMetadata } = validatedArgs;
-      
+
       const content = [];
-      
+
       const priorities = { info: 0.5, warning: 0.7, error: 1.0, success: 0.6 };
-      const audiences = { 
-        info: ["user", "assistant"], 
-        warning: ["user"], 
-        error: ["user", "assistant"], 
-        success: ["user"] 
+      const audiences = {
+        info: ["user", "assistant"],
+        warning: ["user"],
+        error: ["user", "assistant"],
+        success: ["user"]
       };
-      
+
       content.push({
         type: "text",
         text: `This is a ${messageType} message demonstrating annotations.`,
@@ -411,7 +412,7 @@ export function setupToolHandlers(server: Server) {
           messageType: messageType,
         },
       });
-      
+
       if (includeMetadata) {
         content.push({
           type: "text",
@@ -423,7 +424,7 @@ export function setupToolHandlers(server: Server) {
           },
         });
       }
-      
+
       return { content };
     }
 
