@@ -15,7 +15,7 @@ type ToolInput = z.infer<typeof ToolInputSchema>;
 
 // Basic Tools
 const EchoSchema = z.object({
-    message: z.string().describe("Message to echo back").nullable().default(null),
+    message: z.string().describe("Message to echo back"),
     numberList: z.array(z.number()).nullable().default(null).describe("Nullable List of numbers"),
 });
 
