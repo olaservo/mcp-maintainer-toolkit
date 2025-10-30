@@ -18,9 +18,10 @@ const EchoSchema = z.object({
   message: z.string().describe("Message to echo back"),
 });
 
+const number = z.number().describe("A number to add");
 const AddSchema = z.object({
-  a: z.number().describe("First number"),
-  b: z.number().describe("Second number"),
+  a: number,
+  b: number
 });
 
 const GetCurrentTimeSchema = z.object({
@@ -45,18 +46,21 @@ const AnnotatedResponseSchema = z.object({
   includeMetadata: z.boolean().default(true).describe("Whether to include metadata"),
 });
 
+const address =  z.object({
+        street: z.string().describe("Street address"),
+        city: z.string().describe("City name"),
+        state: z.string().describe("State or province"),
+        zipCode: z.string().describe("ZIP or postal code"),
+        country: z.string().default("US").describe("Country code (ISO 3166-1 alpha-2)"),
+    }).describe("Address details");
+
 // Testing Tools
 const ComplexOrderSchema = z.object({
   customerName: z.string().describe("Full customer name for the order"),
   customerTaxId: z.string().describe("Tax identification number (e.g., 123-45-6789)"),
   customerEmail: z.string().email().describe("Customer's email address for notifications"),
-  shippingAddress: z.object({
-    street: z.string().describe("Street address"),
-    city: z.string().describe("City name"),
-    state: z.string().describe("State or province"),
-    zipCode: z.string().describe("ZIP or postal code"),
-    country: z.string().default("US").describe("Country code (ISO 3166-1 alpha-2)"),
-  }).describe("Shipping address details"),
+  billingAddress: address,
+  shippingAddress: address,
   items: z.array(z.object({
     productName: z.string().describe("Name of the product"),
     productSku: z.string().describe("Product SKU or identifier"),
