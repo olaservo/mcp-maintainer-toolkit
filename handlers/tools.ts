@@ -1,12 +1,21 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import {
   CallToolRequestSchema,
+  ClientCapabilities,
+  ElicitResultSchema,
   ListToolsRequestSchema,
   Tool,
   ToolSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+
+// Store client capabilities for conditional tool exposure
+let clientCapabilities: ClientCapabilities | undefined;
+
+export function setClientCapabilities(capabilities: ClientCapabilities | undefined) {
+  clientCapabilities = capabilities;
+}
 
 const ToolInputSchema = ToolSchema.shape.inputSchema;
 type ToolInput = z.infer<typeof ToolInputSchema>;
@@ -147,25 +156,28 @@ The improvements balance readability with screen real estate, ensuring users can
 
 Try scrolling this description in the detail view to see the overflow handling in action!`);
 
+const ElicitationAllOptionalSchema = z.object({}).describe("Tool to test elicitation with all optional fields (https://github.com/modelcontextprotocol/inspector/pull/926). This tests the bug fix where submitting an elicitation form with no required fields would fail validation.");
+
 export enum ToolName {
   // Basic Tools
   ECHO = "echo",
-  ADD = "add", 
+  ADD = "add",
   GET_CURRENT_TIME = "getCurrentTime",
-  
+
   // Data Tools
   FORMAT_DATA = "formatData",
-  
+
   // Advanced Features
   LONG_RUNNING_TASK = "longRunningTask",
   ANNOTATED_RESPONSE = "annotatedResponse",
-  
+
   // Testing Tools
   COMPLEX_ORDER = "complexOrder",
   STRICT_TYPE_VALIDATION = "strictTypeValidation",
   UNION_TYPE_TEST = "unionTypeTest",
   ENUM_DROPDOWN_TEST = "enumDropdownTest",
   LONG_DESCRIPTION_TEST = "longDescriptionTest",
+  ELICITATION_ALL_OPTIONAL = "elicitationAllOptional",
 }
 
 // Helper functions
@@ -277,10 +289,19 @@ export function setupToolHandlers(server: Server) {
       },
     ];
 
+    // Only expose elicitation tool if client supports it
+    if (clientCapabilities?.elicitation) {
+      tools.push({
+        name: ToolName.ELICITATION_ALL_OPTIONAL,
+        description: "Tests elicitation with all optional fields (https://github.com/modelcontextprotocol/inspector/pull/926)",
+        inputSchema: zodToJsonSchema(ElicitationAllOptionalSchema) as ToolInput,
+      });
+    }
+
     return { tools };
   });
 
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
     const { name, arguments: args } = request.params;
 
     // Basic Tools
@@ -506,6 +527,79 @@ export function setupToolHandlers(server: Server) {
           },
         ],
       };
+    }
+
+    if (name === ToolName.ELICITATION_ALL_OPTIONAL) {
+      ElicitationAllOptionalSchema.parse(args);
+
+      const elicitationResult = await extra.sendRequest({
+        method: 'elicitation/create',
+        params: {
+          message: 'This elicitation form has ALL OPTIONAL fields. Try submitting without filling in any fields to test PR #926!',
+          requestedSchema: {
+            type: 'object',
+            properties: {
+              preference: {
+                type: 'string',
+                description: 'Optional preference (you can leave this blank)',
+              },
+              notes: {
+                type: 'string',
+                description: 'Optional notes (you can leave this blank too)',
+              },
+              optionalNumber: {
+                type: 'number',
+                description: 'Optional number field',
+              },
+              optionalBoolean: {
+                type: 'boolean',
+                description: 'Optional boolean checkbox',
+              },
+            },
+            // No required array - all fields are optional!
+          },
+        },
+      }, ElicitResultSchema, { timeout: 10 * 60 * 1000 /* 10 minutes */ });
+
+      const content = [];
+
+      if (elicitationResult.action === 'accept' && elicitationResult.content) {
+        content.push({
+          type: "text",
+          text: `✅ Elicitation with all optional fields completed successfully!\n\nThis tests the fix from PR #926 where submitting a form with no required fields would previously fail with "Validation Error: data should be object".`,
+        });
+
+        const userData = elicitationResult.content;
+        const lines = [];
+        if (userData.preference) lines.push(`- Preference: ${userData.preference}`);
+        if (userData.notes) lines.push(`- Notes: ${userData.notes}`);
+        if (userData.optionalNumber !== undefined) lines.push(`- Number: ${userData.optionalNumber}`);
+        if (userData.optionalBoolean !== undefined) lines.push(`- Boolean: ${userData.optionalBoolean}`);
+
+        if (lines.length > 0) {
+          content.push({
+            type: "text",
+            text: `User provided:\n${lines.join('\n')}`,
+          });
+        } else {
+          content.push({
+            type: "text",
+            text: `User submitted the form empty (all fields left blank). This is the exact scenario that PR #926 fixes!`,
+          });
+        }
+      } else if (elicitationResult.action === 'decline') {
+        content.push({
+          type: "text",
+          text: `User declined to provide information.`,
+        });
+      } else if (elicitationResult.action === 'cancel') {
+        content.push({
+          type: "text",
+          text: `User cancelled the elicitation dialog.`,
+        });
+      }
+
+      return { content };
     }
 
     throw new Error(`Unknown tool: ${name}`);

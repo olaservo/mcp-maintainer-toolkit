@@ -1,5 +1,5 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { setupToolHandlers } from "./handlers/tools.js";
+import { setClientCapabilities, setupToolHandlers } from "./handlers/tools.js";
 import { setupResourceHandlers } from "./handlers/resources.js";
 import { setupPromptHandlers } from "./handlers/prompts.js";
 
@@ -14,6 +14,7 @@ export const createServer = () => {
         tools: {},
         resources: { subscribe: true },
         prompts: {},
+        elicitation: {},
       },
     }
   );
@@ -26,6 +27,11 @@ export const createServer = () => {
 
   // Setup prompt handlers
   setupPromptHandlers(server);
+
+  // Set client capabilities after initialization
+  server.oninitialized = async () => {
+    setClientCapabilities(server.getClientCapabilities());
+  };
 
   const cleanup = async () => {
     await cleanupResources();
