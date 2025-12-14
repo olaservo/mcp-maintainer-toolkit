@@ -5,7 +5,6 @@ import {
   ElicitResultSchema,
   ListToolsRequestSchema,
   Tool,
-  ToolSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
@@ -17,8 +16,7 @@ export function setClientCapabilities(capabilities: ClientCapabilities | undefin
   clientCapabilities = capabilities;
 }
 
-const ToolInputSchema = ToolSchema.shape.inputSchema;
-type ToolInput = z.infer<typeof ToolInputSchema>;
+type ToolInput = Tool["inputSchema"];
 
 /* Input schemas for tools */
 
