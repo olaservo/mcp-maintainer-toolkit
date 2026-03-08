@@ -15,7 +15,7 @@ app.get("/sse", async (req, res) => {
   transport = new SSEServerTransport("/message", res);
   await server.connect(transport);
 
-  server.onclose = async () => {
+  server.server.onclose = async () => {
     await cleanup();
     await server.close();
   };

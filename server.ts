@@ -1,36 +1,33 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { setClientCapabilities, setupToolHandlers } from "./handlers/tools.js";
-import { setupResourceHandlers } from "./handlers/resources.js";
-import { setupPromptHandlers } from "./handlers/prompts.js";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { registerTools, registerConditionalTools } from "./tools/index.js";
+import { registerResources } from "./resources/index.js";
+import { registerPrompts } from "./prompts/index.js";
 
 export const createServer = () => {
-  const server = new Server(
+  const server = new McpServer(
     {
       name: "mcp-maintainer-toolkit",
-      version: "0.1.2",
+      version: "0.1.5",
     },
     {
       capabilities: {
-        tools: {},
         resources: { subscribe: true },
-        prompts: {},
-        elicitation: {},
       },
     }
   );
 
-  // Setup tool handlers
-  setupToolHandlers(server);
+  // Register tools
+  registerTools(server);
 
-  // Setup resource handlers
-  const { cleanup: cleanupResources } = setupResourceHandlers(server);
+  // Register resources (includes pagination override and subscriptions)
+  const { cleanup: cleanupResources } = registerResources(server);
 
-  // Setup prompt handlers
-  setupPromptHandlers(server);
+  // Register prompts
+  registerPrompts(server);
 
-  // Set client capabilities after initialization
-  server.oninitialized = async () => {
-    setClientCapabilities(server.getClientCapabilities());
+  // Register conditional tools after initialization (when client capabilities are known)
+  server.server.oninitialized = async () => {
+    registerConditionalTools(server);
   };
 
   const cleanup = async () => {
