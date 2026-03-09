@@ -2,9 +2,11 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 
+const number = z.number().describe("A number to add");
+
 const AddSchema = z.object({
-  a: z.number().describe("First number"),
-  b: z.number().describe("Second number"),
+  a: number,
+  b: number,
 });
 
 export const registerAddTool = (server: McpServer) => {

@@ -10,6 +10,8 @@ import { registerStrictTypeValidationTool } from "./strictTypeValidation.js";
 import { registerUnionTypeTestTool } from "./unionTypeTest.js";
 import { registerEnumDropdownTestTool } from "./enumDropdownTest.js";
 import { registerLongDescriptionTestTool } from "./longDescriptionTest.js";
+import { registerJsonRefTestTool } from "./jsonRefTest.js";
+import { registerUserFilterTestTool } from "./userFilterTest.js";
 import { registerElicitationAllOptionalTool } from "./elicitationAllOptional.js";
 
 export const registerTools = (server: McpServer) => {
@@ -24,6 +26,8 @@ export const registerTools = (server: McpServer) => {
   registerUnionTypeTestTool(server);
   registerEnumDropdownTestTool(server);
   registerLongDescriptionTestTool(server);
+  registerJsonRefTestTool(server);
+  registerUserFilterTestTool(server);
 };
 
 export const registerConditionalTools = (server: McpServer) => {
