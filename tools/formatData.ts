@@ -2,7 +2,10 @@ import { McpServer, CallToolResult } from "@modelcontextprotocol/server";
 import { z } from "zod";
 
 const FormatDataSchema = z.object({
-  data: z.any().describe("Data to format"),
+  // `.optional()` is load-bearing: zod 3 treated a bare `z.any()` as optional, zod 4
+  // treats it as required. Without it the v2 bump silently turns `data` into a required
+  // argument and a call that succeeded on v1 comes back as isError.
+  data: z.any().optional().describe("Data to format"),
   format: z.enum(["json", "yaml", "table"]).default("json").describe("Output format"),
 });
 

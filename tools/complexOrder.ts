@@ -7,7 +7,7 @@ const address = z.object({
   state: z.string().describe("State or province"),
   zipCode: z.string().describe("ZIP or postal code"),
   country: z.string().default("US").describe("Country code (ISO 3166-1 alpha-2)"),
-}).describe("Address details");
+}).describe("Address details").meta({ id: "Address" });
 
 const ComplexOrderSchema = z.object({
   customerName: z.string().describe("Full customer name for the order"),
