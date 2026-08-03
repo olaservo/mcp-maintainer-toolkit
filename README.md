@@ -1,5 +1,14 @@
 # MCP Maintainer Toolkit
 
+> [!IMPORTANT]
+> **This repository is archived and no longer maintained.**
+>
+> It targets **MCP TypeScript SDK v1** (`@modelcontextprotocol/sdk`), which has been superseded by the v2 packages (`@modelcontextprotocol/server`, `/client`, `/core`, …). A complete, reviewed v1 → v2 migration exists on the [`chore/migrate-mcp-sdk-v2`](../../tree/chore/migrate-mcp-sdk-v2) branch and in [PR #58](../../pull/58) (closed unmerged) if you want to fork and continue from it.
+>
+> `mcp-maintainer-toolkit` remains published on npm at `0.1.5`; archiving does not unpublish it, but it will receive no further updates.
+>
+> **Known defect, unfixed:** a single module-scope `McpServer` is shared across all Streamable HTTP sessions. `Server._clientCapabilities` is one field overwritten by the most recent session, so a session that advertised `elicitation` can have it overwritten by one that did not — a later `elicitationAllOptional` call then hangs for the full 10-minute request timeout. Anyone reviving this should restructure around SDK v2's `createMcpHandler` / `McpServerFactory`, which gives each session its own server instance.
+
 A Model Context Protocol (MCP) server with utilities to help with maintaining MCP repositories. This toolkit provides various tools and utilities for repository maintenance, testing, and development workflows.
 
 ## Features
