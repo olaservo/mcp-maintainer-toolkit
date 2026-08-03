@@ -1,4 +1,4 @@
-import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/server";
 
 function generatePost(id: string, includes: string[] = [], format: string = "json"): any {
   const post: any = {

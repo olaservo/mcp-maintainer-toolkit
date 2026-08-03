@@ -1,4 +1,4 @@
-import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/server";
 
 function generateUsers(nameFilter?: string, limit: number = 10, offset: number = 0): any[] {
   const users = [

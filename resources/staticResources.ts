@@ -1,5 +1,4 @@
-import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { Resource } from "@modelcontextprotocol/sdk/types.js";
+import { McpServer, ResourceTemplate, Resource } from "@modelcontextprotocol/server";
 
 const PAGE_SIZE = 10;
 

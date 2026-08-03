@@ -1,5 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { ListResourcesRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { registerStaticResources, getStaticResourcesPage } from "./staticResources.js";
 import { registerSearchResource } from "./searchResource.js";
 import { registerUsersResource } from "./usersResource.js";
@@ -14,7 +13,7 @@ export function registerResources(server: McpServer) {
   registerPostsResource(server);
 
   // Override the list handler to support cursor-based pagination for static resources
-  server.server.setRequestHandler(ListResourcesRequestSchema, async (request) => {
+  server.server.setRequestHandler('resources/list', async (request) => {
     return getStaticResourcesPage(request.params?.cursor);
   });
 

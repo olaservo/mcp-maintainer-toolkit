@@ -1,8 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import {
-  SubscribeRequestSchema,
-  UnsubscribeRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { McpServer } from "@modelcontextprotocol/server";
 
 export function setupSubscriptions(server: McpServer) {
   const subscriptions = new Set<string>();
@@ -16,13 +12,13 @@ export function setupSubscriptions(server: McpServer) {
     }
   }, 10000);
 
-  server.server.setRequestHandler(SubscribeRequestSchema, async (request) => {
+  server.server.setRequestHandler('resources/subscribe', async (request) => {
     const { uri } = request.params;
     subscriptions.add(uri);
     return {};
   });
 
-  server.server.setRequestHandler(UnsubscribeRequestSchema, async (request) => {
+  server.server.setRequestHandler('resources/unsubscribe', async (request) => {
     subscriptions.delete(request.params.uri);
     return {};
   });

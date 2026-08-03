@@ -1,5 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { McpServer, CallToolResult } from "@modelcontextprotocol/server";
 import { z } from "zod";
 
 const LongRunningTaskSchema = z.object({
@@ -12,11 +11,11 @@ export const registerLongRunningTaskTool = (server: McpServer) => {
   server.registerTool("longRunningTask", {
     description: "Demonstrates a long-running task with progress updates",
     inputSchema: LongRunningTaskSchema,
-  }, async (args, extra): Promise<CallToolResult> => {
+  }, async (args, ctx): Promise<CallToolResult> => {
     const validatedArgs = LongRunningTaskSchema.parse(args);
     const { duration, steps, taskName } = validatedArgs;
     const stepDuration = duration / steps;
-    const progressToken = extra._meta?.progressToken;
+    const progressToken = ctx.mcpReq._meta?.progressToken;
 
     for (let i = 1; i <= steps; i++) {
       await new Promise((resolve) => setTimeout(resolve, stepDuration * 1000));
@@ -31,7 +30,7 @@ export const registerLongRunningTaskTool = (server: McpServer) => {
               progressToken,
             },
           },
-          { relatedRequestId: extra.requestId }
+          { relatedRequestId: ctx.mcpReq.id }
         );
       }
     }

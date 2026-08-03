@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 import { createServer } from "./server.js";
 
 console.error('Starting default (STDIO) server...');

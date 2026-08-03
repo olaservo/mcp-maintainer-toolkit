@@ -1,4 +1,4 @@
-import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/server";
 
 function generateSearchResults(query: string): any[] {
   const searchTerms = [

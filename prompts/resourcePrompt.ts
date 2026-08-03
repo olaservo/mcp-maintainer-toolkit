@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 
 export const registerResourcePrompt = (server: McpServer) => {
@@ -6,9 +6,9 @@ export const registerResourcePrompt = (server: McpServer) => {
     "resource_prompt",
     {
       description: "A prompt that includes an embedded resource reference",
-      argsSchema: {
+      argsSchema: z.object({
         resourceId: z.string().describe("Resource ID to include (1-100)"),
-      },
+      }),
     },
     ({ resourceId }) => {
       const id = parseInt(resourceId, 10);

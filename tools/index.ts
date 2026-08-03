@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { registerEchoTool } from "./echo.js";
 import { registerAddTool } from "./add.js";
 import { registerGetCurrentTimeTool } from "./getCurrentTime.js";

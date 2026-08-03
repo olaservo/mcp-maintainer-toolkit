@@ -1,5 +1,5 @@
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { InMemoryEventStore } from '@modelcontextprotocol/sdk/examples/shared/inMemoryEventStore.js';
+import { NodeStreamableHTTPServerTransport } from "@modelcontextprotocol/node";
+import { InMemoryEventStore } from './inMemoryEventStore.js';
 import express, { Request, Response } from "express";
 import { createServer } from "./server.js";
 import { randomUUID } from 'node:crypto';
@@ -10,14 +10,14 @@ const app = express();
 
 const { server, cleanup } = createServer();
 
-const transports: { [sessionId: string]: StreamableHTTPServerTransport } = {};
+const transports: { [sessionId: string]: NodeStreamableHTTPServerTransport } = {};
 
 app.post('/mcp', async (req: Request, res: Response) => {
   console.error('Received MCP POST request');
   try {
     // Check for existing session ID
     const sessionId = req.headers['mcp-session-id'] as string | undefined;
-    let transport: StreamableHTTPServerTransport;
+    let transport: NodeStreamableHTTPServerTransport;
 
     if (sessionId && transports[sessionId]) {
       // Reuse existing transport
@@ -25,7 +25,7 @@ app.post('/mcp', async (req: Request, res: Response) => {
     } else if (!sessionId) {
       // New initialization request
       const eventStore = new InMemoryEventStore();
-      transport = new StreamableHTTPServerTransport({
+      transport = new NodeStreamableHTTPServerTransport({
         sessionIdGenerator: () => randomUUID(),
         eventStore, // Enable resumability
         onsessioninitialized: (sessionId: string) => {

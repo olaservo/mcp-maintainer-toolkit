@@ -1,8 +1,5 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import {
-  ElicitResultSchema,
-  CallToolResult,
-} from "@modelcontextprotocol/sdk/types.js";
+import { McpServer, CallToolResult } from "@modelcontextprotocol/server";
+import { z } from "zod";
 
 export const registerElicitationAllOptionalTool = (server: McpServer) => {
   const clientCapabilities = server.server.getClientCapabilities() || {};
@@ -12,35 +9,32 @@ export const registerElicitationAllOptionalTool = (server: McpServer) => {
 
   server.registerTool("elicitationAllOptional", {
     description: "Tests elicitation with all optional fields (https://github.com/modelcontextprotocol/inspector/pull/926)",
-    inputSchema: {},
-  }, async (_args, extra): Promise<CallToolResult> => {
-    const elicitationResult = await extra.sendRequest({
-      method: 'elicitation/create',
-      params: {
-        message: 'This elicitation form has ALL OPTIONAL fields. Try submitting without filling in any fields to test PR #926!',
-        requestedSchema: {
-          type: 'object',
-          properties: {
-            preference: {
-              type: 'string',
-              description: 'Optional preference (you can leave this blank)',
-            },
-            notes: {
-              type: 'string',
-              description: 'Optional notes (you can leave this blank too)',
-            },
-            optionalNumber: {
-              type: 'number',
-              description: 'Optional number field',
-            },
-            optionalBoolean: {
-              type: 'boolean',
-              description: 'Optional boolean checkbox',
-            },
+    inputSchema: z.object({}),
+  }, async (_args, ctx): Promise<CallToolResult> => {
+    const elicitationResult = await ctx.mcpReq.elicitInput({
+      message: 'This elicitation form has ALL OPTIONAL fields. Try submitting without filling in any fields to test PR #926!',
+      requestedSchema: {
+        type: 'object',
+        properties: {
+          preference: {
+            type: 'string',
+            description: 'Optional preference (you can leave this blank)',
+          },
+          notes: {
+            type: 'string',
+            description: 'Optional notes (you can leave this blank too)',
+          },
+          optionalNumber: {
+            type: 'number',
+            description: 'Optional number field',
+          },
+          optionalBoolean: {
+            type: 'boolean',
+            description: 'Optional boolean checkbox',
           },
         },
       },
-    }, ElicitResultSchema, { timeout: 10 * 60 * 1000 });
+    }, { timeout: 10 * 60 * 1000 });
 
     const content: CallToolResult["content"] = [];
 

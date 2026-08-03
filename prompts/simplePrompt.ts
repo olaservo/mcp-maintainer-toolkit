@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 
 export const registerSimplePrompt = (server: McpServer) => {
   server.registerPrompt(

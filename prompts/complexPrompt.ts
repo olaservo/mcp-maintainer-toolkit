@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 
 const MCP_TINY_IMAGE =
@@ -9,10 +9,10 @@ export const registerComplexPrompt = (server: McpServer) => {
     "complex_prompt",
     {
       description: "A prompt with arguments for customization",
-      argsSchema: {
+      argsSchema: z.object({
         temperature: z.string().describe("Temperature setting (0-1.0)"),
         style: z.string().optional().describe("Output style preference"),
-      },
+      }),
     },
     ({ temperature, style }) => {
       const temp = temperature || "0.7";
